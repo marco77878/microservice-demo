@@ -1,6 +1,10 @@
 # microservice-demo
 ##  编译项目
+```
 备注：确保maven对应的jdk版本是jdk17及以上，推荐使用maven 3.8.x
+
+```
+
 ``` bash
 mvn clean install
 ```
@@ -18,6 +22,8 @@ docker-compose -f docker-composr-service.yml up --build
 ##  登录网址
 <http://127.0.0.1:7573/hello>
 
+<img src="./img/login-with-oauth2.0.png">
+
 ## 登录方式
 ```bash
 
@@ -26,6 +32,11 @@ docker-compose -f docker-composr-service.yml up --build
 输入用户名：user，密码：123456 登录或者选择Github，Google登录
 ```
 
+<img src="./img/login-page.png">
+
+登录成功页面
+
+<img src="./img/hello-gateway.png">
 
 # 获取token
 
