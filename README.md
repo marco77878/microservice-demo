@@ -9,13 +9,13 @@ mvn clean install
 
 ##  docker启动 nacos 和 mysql
 ``` bash
-docker-compose -f docker-composr-env.yml up --build
+docker-compose -f docker-compose-env.yml up --build
 ```
 ### nacos地址：<http://localhost:8848/nacos/index.html>
 
 ## docker启动微服务
 ``` bash
-docker-compose -f docker-composr-service.yml up --build
+docker-compose -f docker-compose-service.yml up --build
 ```
 ##  登录网址
 <http://127.0.0.1:7573/hello>
