@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  uaa:
+    image: uaa
+    hostname: uaa
+    build:
+      dockerfile: ./microservice-demo/uaa/Dockerfile
+      context: ../
+    container_name: uaa
+    ports:
+      - "9000:9000"
+    healthcheck:
+      test: ""
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    networks:
+      - spring_cloud_default
+
+  gateway:
+    image: gateway
+    hostname: gateway
+    build:
+      dockerfile: ./microservice-demo/gateway/Dockerfile
+      context: ../
+    container_name: gateway
+    ports:
+      - "7573:7573"
+    healthcheck:
+      test: ""
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    depends_on:
+      uaa:
+        condition: service_healthy
+    networks:
+      - spring_cloud_default
+
+  messages-resource:
+    image: messages-resource
+    hostname: messages-resource
+    build:
+      dockerfile: ./microservice-demo/messages-resource/Dockerfile
+      context: ../
+    container_name: messages-resource
+    ports:
+      - "8088:8088"
+    networks:
+      - spring_cloud_default
+
+networks:
+  spring_cloud_default:
+    external:
+      name: spring_cloud_default

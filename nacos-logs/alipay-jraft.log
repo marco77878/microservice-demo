@@ -1,0 +1,82 @@
+2023-11-11 13:35:24,713 INFO SPI service [com.alipay.sofa.jraft.JRaftServiceFactory - com.alipay.sofa.jraft.core.DefaultJRaftServiceFactory] loading.
+
+2023-11-11 13:35:25,378 INFO SPI service [com.alipay.sofa.jraft.rpc.RaftRpcFactory - com.alipay.sofa.jraft.rpc.impl.GrpcRaftRpcFactory] loading.
+
+2023-11-11 13:35:26,073 INFO SPI service [com.alipay.sofa.jraft.util.JRaftSignalHandler - com.alipay.sofa.jraft.NodeDescribeSignalHandler] loading.
+
+2023-11-11 13:35:26,078 INFO SPI service [com.alipay.sofa.jraft.util.JRaftSignalHandler - com.alipay.sofa.jraft.NodeMetricsSignalHandler] loading.
+
+2023-11-11 13:35:26,081 INFO SPI service [com.alipay.sofa.jraft.util.JRaftSignalHandler - com.alipay.sofa.jraft.ThreadPoolMetricsSignalHandler] loading.
+
+2023-11-11 13:35:26,090 INFO SPI service [com.alipay.sofa.jraft.util.timer.RaftTimerFactory - com.alipay.sofa.jraft.util.timer.DefaultRaftTimerFactory] loading.
+
+2023-11-11 13:35:26,105 INFO The number of active nodes increment to 1.
+
+2023-11-11 13:35:26,653 INFO Starts FSMCaller successfully.
+
+2023-11-11 13:35:26,664 WARN No data for snapshot reader /home/nacos/data/protocol/raft/naming_persistent_service_v2/snapshot.
+
+2023-11-11 13:35:26,678 INFO Node <naming_persistent_service_v2/nacos-server:7848> init, term=0, lastLogId=LogId [index=0, term=0], conf=nacos-server:7848, oldConf=.
+
+2023-11-11 13:35:26,681 INFO Node <naming_persistent_service_v2/nacos-server:7848> start vote and grant vote self, term=0.
+
+2023-11-11 13:35:26,753 INFO Save raft meta, path=/home/nacos/data/protocol/raft/naming_persistent_service_v2/meta-data, term=1, votedFor=nacos-server:7848, cost time=60 ms
+
+2023-11-11 13:35:26,756 INFO Node <naming_persistent_service_v2/nacos-server:7848> become leader of group, term=1, conf=nacos-server:7848, oldConf=.
+
+2023-11-11 13:35:26,761 INFO -Djraft.recyclers.maxCapacityPerThread: 4096.
+
+2023-11-11 13:35:26,766 WARN RPC server is not started in RaftGroupService.
+
+2023-11-11 13:35:26,767 INFO Start the RaftGroupService successfully.
+
+2023-11-11 13:35:26,781 INFO onLeaderStart: term=1.
+
+2023-11-11 13:35:26,797 INFO The number of active nodes increment to 2.
+
+2023-11-11 13:35:26,913 INFO Starts FSMCaller successfully.
+
+2023-11-11 13:35:26,915 WARN No data for snapshot reader /home/nacos/data/protocol/raft/naming_instance_metadata/snapshot.
+
+2023-11-11 13:35:26,919 INFO Node <naming_instance_metadata/nacos-server:7848> init, term=0, lastLogId=LogId [index=0, term=0], conf=nacos-server:7848, oldConf=.
+
+2023-11-11 13:35:26,921 INFO Node <naming_instance_metadata/nacos-server:7848> start vote and grant vote self, term=0.
+
+2023-11-11 13:35:26,926 INFO Save raft meta, path=/home/nacos/data/protocol/raft/naming_instance_metadata/meta-data, term=1, votedFor=nacos-server:7848, cost time=3 ms
+
+2023-11-11 13:35:26,927 INFO Node <naming_instance_metadata/nacos-server:7848> become leader of group, term=1, conf=nacos-server:7848, oldConf=.
+
+2023-11-11 13:35:26,930 WARN RPC server is not started in RaftGroupService.
+
+2023-11-11 13:35:26,931 INFO Start the RaftGroupService successfully.
+
+2023-11-11 13:35:26,933 INFO onLeaderStart: term=1.
+
+2023-11-11 13:35:26,941 INFO The number of active nodes increment to 3.
+
+2023-11-11 13:35:26,945 INFO Creating new channel to: nacos-server:7848.
+
+2023-11-11 13:35:27,029 INFO The channel nacos-server:7848 is in state: CONNECTING.
+
+2023-11-11 13:35:27,058 INFO Starts FSMCaller successfully.
+
+2023-11-11 13:35:27,060 WARN No data for snapshot reader /home/nacos/data/protocol/raft/naming_service_metadata/snapshot.
+
+2023-11-11 13:35:27,065 INFO Node <naming_service_metadata/nacos-server:7848> init, term=0, lastLogId=LogId [index=0, term=0], conf=nacos-server:7848, oldConf=.
+
+2023-11-11 13:35:27,068 INFO Node <naming_service_metadata/nacos-server:7848> start vote and grant vote self, term=0.
+
+2023-11-11 13:35:27,075 INFO Save raft meta, path=/home/nacos/data/protocol/raft/naming_service_metadata/meta-data, term=1, votedFor=nacos-server:7848, cost time=5 ms
+
+2023-11-11 13:35:27,077 INFO Node <naming_service_metadata/nacos-server:7848> become leader of group, term=1, conf=nacos-server:7848, oldConf=.
+
+2023-11-11 13:35:27,080 WARN RPC server is not started in RaftGroupService.
+
+2023-11-11 13:35:27,081 INFO Start the RaftGroupService successfully.
+
+2023-11-11 13:35:27,084 INFO onLeaderStart: term=1.
+
+2023-11-11 13:35:27,573 INFO The channel nacos-server:7848 is in state: READY.
+
+2023-11-11 13:35:27,575 INFO The channel nacos-server:7848 has successfully established.
+

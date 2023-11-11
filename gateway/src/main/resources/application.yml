@@ -1,0 +1,72 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: messages-resource
+          uri: lb://messages-resource
+          predicates:
+            - Path=/messages-resource/**
+          filters:
+            - StripPrefix=1
+        - id: frontend-client
+          uri: lb://frontend-client
+          predicates:
+            - Path=/frontend-client/**
+          filters:
+            - StripPrefix=1
+        - id: uaa
+          uri: lb://uaa
+          predicates:
+            - Path=/oauth2/**,/userinfo
+          filters:
+            - StripPrefix=1
+        - id: uaa-browser
+          uri: http://localhost:9000
+          predicates:
+            - Path=/oauth2/authorize,/activate`
+
+  security:
+    oauth2:
+      client:
+        registration:
+          gateway-client-oidc:
+            provider: uaa
+            client-id: gateway-client-oidc
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:7573/login/oauth2/code/{registrationId}"
+
+            scope: openid, profile
+            client-name: gateway-client-oidc
+          gateway-client-authorization-code:
+            provider: uaa
+            client-id: gateway-client-authorization-code
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:7573/login/oauth2/code/gateway-client-authorization-code"
+            scope: openid,message.read,message.write
+            client-name: gateway-client-authorization-code
+          gateway-client-client-credentials:
+            provider: uaa
+            client-id: messaging-client
+            client-secret: secret
+            authorization-grant-type: client_credentials
+            scope: openid,message.read,message.write
+            client-name: gateway-client-client-credentials
+          gateway-client-device-code:
+            provider: uaa
+            client-id: gateway-client-device-code
+            authorization-grant-type: urn:ietf:params:oauth:grant-type:device_code
+            scope: .read,.write
+            client-name: gateway-client-device-code
+        provider:
+          #认证服务器信息
+          uaa:
+            #授权地址
+            issuer-uri: http://uaa:9000
+            authorizationUri: http://localhost:9000/oauth2/authorize
+            #令牌获取地址
+            tokenUri: ${spring.security.oauth2.client.provider.uaa.issuer-uri}/oauth2/token
+      resource-server:
+        jwt:
+          issuer-uri: http://uaa:9000

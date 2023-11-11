@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  nacos-server:
+    image: nacos/nacos-server:v2.2.3
+    hostname: nacos-server
+    container_name: nacos
+    env_file:
+      - ./env/docker.env
+    volumes:
+      - ./nacos-logs/:/home/nacos/logs
+    ports:
+      - "9849:9849"
+      - "9848:9848"
+      - "8848:8848"
+      - "7848:7848"
+    depends_on:
+      mysql-server:
+        condition: service_healthy
+    restart: always
+    networks:
+      - spring_cloud_default
+  mysql-server:
+    container_name: mysql-server
+    hostname: mysql-server
+    build:
+      context: .
+      dockerfile: mysql-Dockerfile
+    image: example/mysql:8.0.30
+    env_file:
+      - ./env/docker.env
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    networks:
+      - spring_cloud_default
+
+networks:
+  spring_cloud_default:
+    name:  spring_cloud_default
+    driver: bridge
+
+

@@ -1,0 +1,58 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO
+
+spring:
+  name: frontend-client
+  thymeleaf:
+    cache: false
+  security:
+    oauth2:
+      client:
+        registration:
+          messaging-client-oidc:
+            provider: uaa
+            client-id: messaging-client-oidc
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://frontend-client:8080/login/oauth2/code/{registrationId}"
+            scope: openid, profile
+            client-name: messaging-client-oidc
+          messaging-client-authorization-code:
+            provider: uaa
+            client-id: messaging-client-authorization-code
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://frontend-client:8080/authorized"
+            scope: .read,.write
+            client-name: messaging-client-authorization-code
+          messaging-client-client-credentials:
+            provider: uaa
+            client-id: messaging-client
+            client-secret: secret
+            authorization-grant-type: client_credentials
+            scope: .read,.write
+            client-name: messaging-client-client-credentials
+          messaging-client-device-code:
+            provider: uaa
+            client-id: device-messaging-client
+            authorization-grant-type: urn:ietf:params:oauth:grant-type:device_code
+            scope: .read,.write
+            client-name: messaging-client-device-code
+        provider:
+          #认证服务器信息
+          uaa:
+            #授权地址
+            issuer-uri: http://uaa:9000
+            authorizationUri: ${spring.security.oauth2.client.provider.uaa.issuer-uri}/oauth2/authorize
+            #令牌获取地址
+            tokenUri: ${spring.security.oauth2.client.provider.uaa.issuer-uri}/oauth2/token
+
+messages:
+  base-uri: http://messages-resource:8090/messages
