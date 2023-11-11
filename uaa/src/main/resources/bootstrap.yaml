@@ -7,6 +7,5 @@ spring:
     nacos:
       discovery:
         server-addr: nacos-server:8848
-        ip: 127.0.0.1
       config:
         server-addr: nacos-server:8848

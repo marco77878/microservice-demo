@@ -12,6 +12,6 @@ logging:
 spring:
   security:
     oauth2:
-      resourceserver:
+      resource-server:
         jwt:
-          issuer-uri: http://localhost:9000
+          issuer-uri: http://uaa:9000

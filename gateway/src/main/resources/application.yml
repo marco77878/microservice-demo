@@ -14,16 +14,14 @@ spring:
             - Path=/frontend-client/**
           filters:
             - StripPrefix=1
+        - id: uaa-browser
+          uri: http://uaa:9000
+          predicates:
+            - Path=/oauth2/authorize,/activate
         - id: uaa
           uri: lb://uaa
           predicates:
             - Path=/oauth2/**,/userinfo
-          filters:
-            - StripPrefix=1
-        - id: uaa-browser
-          uri: http://localhost:9000
-          predicates:
-            - Path=/oauth2/authorize,/activate`
 
   security:
     oauth2:
@@ -57,7 +55,7 @@ spring:
             provider: uaa
             client-id: gateway-client-device-code
             authorization-grant-type: urn:ietf:params:oauth:grant-type:device_code
-            scope: .read,.write
+            scope: message.read,message.write
             client-name: gateway-client-device-code
         provider:
           #认证服务器信息
