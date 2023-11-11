@@ -84,9 +84,9 @@ curl --location --request POST 'http://localhost:7573/oauth2/token?grant_type=au
 
 <img src="./img/curl-password.png">
 
-* ldap模式
+* ldap模式(待完善)
 
-备注：目前ldap模式校验密码有问题，待实现
+**备注：目前ldap模式校验密码有问题，输入任意密码都可返回token**
 
 ``` bash
 curl --location --request POST 'http://localhost:7573/oauth2/token?grant_type=authorization_ldap&username=user&password=123456&scope=profile' \
