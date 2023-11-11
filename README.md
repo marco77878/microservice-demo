@@ -1,9 +1,7 @@
 # microservice-demo
 ##  编译项目
-```
 备注：确保maven对应的jdk版本是jdk17及以上，推荐使用maven 3.8.x
 
-```
 
 ``` bash
 mvn clean install
