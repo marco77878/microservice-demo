@@ -1,6 +1,0 @@
-2023-11-11 13:38:04,022|nacos-server|messages-resource|DEFAULT_GROUP|null|null|-1|pull|not-found|-1|172.18.0.4|false
-2023-11-11 13:38:04,050|nacos-server|messages-resource.properties|DEFAULT_GROUP|null|null|-1|pull|not-found|-1|172.18.0.4|false
-2023-11-11 13:38:04,236|nacos-server|uaa|DEFAULT_GROUP|null|null|-1|pull|not-found|-1|172.18.0.5|false
-2023-11-11 13:38:04,279|nacos-server|uaa.properties|DEFAULT_GROUP|null|null|-1|pull|not-found|-1|172.18.0.5|false
-2023-11-11 13:38:31,009|nacos-server|gateway|DEFAULT_GROUP|null|null|-1|pull|not-found|-1|172.18.0.6|false
-2023-11-11 13:38:31,046|nacos-server|gateway.properties|DEFAULT_GROUP|null|null|-1|pull|not-found|-1|172.18.0.6|false

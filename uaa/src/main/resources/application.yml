@@ -1,0 +1,42 @@
+server:
+  port: 9000
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google-idp:
+            provider: google
+            client-id: ${GOOGLE_CLIENT_ID:455505670292-f1c0e4qrrtc3mja41q01arfrnvbuencd.apps.googleusercontent.com}
+            client-secret: ${GOOGLE_CLIENT_SECRET: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}
+            scope: openid, https://www.googleapis.com/auth/userinfo.profile, https://www.googleapis.com/auth/userinfo.email
+            client-name: Sign in with Google
+          github-idp:
+            provider: github
+            client-id: ${GITHUB_CLIENT_ID:50cc4e4af5cdede21b27}
+            client-secret: ${GITHUB_CLIENT_SECRET:e5fd52b2d409b729c43450bb5fb9a0c12c7edce8}
+            scope: user:email, read:user
+            client-name: Sign in with GitHub
+        provider:
+          google:
+            user-name-attribute: email
+          github:
+            user-name-attribute: login
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql-server:3306/nacos_devtest
+    username: root
+    password: root
+  ldap:
+    embedded:
+      ldif: classpath:test-server.ldif
+      base-dn: dc=springframework,dc=org
+      port: 8388
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: TRACE
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2: TRACE
