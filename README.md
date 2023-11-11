@@ -32,6 +32,11 @@ docker-compose -f docker-compose-service.yml up --build
 
 <img src="./img/login-page.png">
 
+
+确认授权页面
+
+<img src="./img/consent.jpg">
+
 登录成功页面
 
 <img src="./img/hello-gateway.png">
