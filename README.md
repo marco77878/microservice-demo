@@ -15,7 +15,8 @@ This platform integrates a Unified Authentication Center (**UAA**), an edge **AP
 
 Detailed specifications and architectural deep dives have been separated into dedicated documents:
 
-- 📋 **[Project Requirements Specification](REQUIREMENTS.md)**: Full background, functional specs, API permissions, role constraints, and evaluator criteria.
+- 📋 **[Project Requirements Specification (English)](REQUIREMENTS.md)**: Full background, functional specs, API permissions, role constraints, and evaluator criteria.
+- 📋 **[Project Requirements Specification (Chinese)](REQUIREMENTS_ZH.md)**: Original requirements specification document.
 - 🏛️ **[Technical Architecture & Implementation](ARCHITECTURE.md)**: In-depth architectural designs, Mermaid topology diagrams, authentication flow charts, security filters, role hierarchy, and persistence design.
 
 ---
