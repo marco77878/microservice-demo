@@ -40,24 +40,24 @@ The platform adheres to the **Single Entry Point** and **Stateless Token Authent
 
 ```mermaid
 flowchart TD
-    Client["Client (Browser / CURL)"] -->|HTTP :7573| Gateway["API Gateway Service (:7573)"]
+    Client["Client Request<br/>Browser / CURL"] -->|Port 7573| Gateway["API Gateway<br/>Port: 7573"]
 
-    subgraph "Internal Microservices Mesh"
-        Gateway -->|/uaa/**, /login, /token| UAA["UAA Auth Service (:8081)"]
-        Gateway -->|/products/**| Product["Product Service (:8082)"]
+    subgraph Mesh["Internal Microservices Mesh"]
+        Gateway -->|Auth Routes| UAA["UAA Service<br/>Port: 8081"]
+        Gateway -->|Product Routes| Product["Product Service<br/>Port: 8082"]
 
-        UAA <-->|Register & Discover| Discovery["Eureka Discovery Server (:8761)"]
-        Product <-->|Register & Discover| Discovery
-        Gateway <-->|Dynamic Route Resolution| Discovery
+        UAA <-->|Register| Discovery["Eureka Server<br/>Port: 8761"]
+        Product <-->|Register| Discovery
+        Gateway <-->|Discover| Discovery
 
-        Config["Spring Cloud Config Server (:8888)"] -.->|Centralized Configs| UAA
-        Config -.->|Centralized Configs| Product
+        Config["Config Server<br/>Port: 8888"] -.->|Fetch Config| UAA
+        Config -.->|Fetch Config| Product
     end
 
-    subgraph "Persistence & Directory Tier"
-        UAA -->|JDBC Pool| MySQL[("MySQL 8.0 Database (:3306)")]
-        UAA -->|JNDI LDAP Bind| LDAP[("OpenLDAP Directory (:389)")]
-        Product -->|JPA / Hibernate| MySQL
+    subgraph Stores["Persistence & Directory Tier"]
+        UAA -->|JDBC| MySQL[("MySQL 8.0<br/>Port: 3306")]
+        UAA -->|LDAP Bind| LDAP[("OpenLDAP<br/>Port: 389")]
+        Product -->|JPA| MySQL
     end
 ```
 
@@ -74,24 +74,23 @@ The endpoint handles both `application/x-www-form-urlencoded` and `application/j
 
 ```mermaid
 flowchart TD
-    Req["Auth Request (username, password)"] --> PrefixCheck{"Username starts with 'ldap_'<br/>or LDAP Tab selected?"}
+    Req["Auth Request<br/>User & Password"] --> CheckType{"Provider<br/>Selection"}
     
-    PrefixCheck -->|Yes| LdapBind["LdapAuthService: JNDI Simple Bind to OpenLDAP"]
-    PrefixCheck -->|No| DbQuery["UserRepository: Query Database by Username"]
+    CheckType -->|LDAP User| LdapBind["LdapAuthService<br/>JNDI Simple Bind"]
+    CheckType -->|DB User| DbQuery["UserRepository<br/>Find by Username"]
 
-    DbQuery --> PwdMatch{"BCryptPasswordEncoder.matches()"}
-    PwdMatch -->|Matched| MintToken["JwtUtil.generateToken(username, role)"]
-    PwdMatch -->|Mismatch| FallbackLdap["Fallback Attempt against LDAP"]
+    DbQuery --> PwdMatch{"BCrypt Password<br/>Matches?"}
+    PwdMatch -->|Yes| MintToken["JwtUtil<br/>Generate Token"]
+    PwdMatch -->|No| LdapBind
 
-    FallbackLdap --> LdapBind
-    LdapBind --> LdapCheck{"LDAP Bind Success?"}
+    LdapBind --> LdapCheck{"OpenLDAP<br/>Bind OK?"}
     LdapCheck -->|Yes| MintToken
-    LdapCheck -->|Offline / Fail| PredefinedLdap{"Matches Predefined LDAP Credentials?"}
-    PredefinedLdap -->|Yes| MintToken
-    PredefinedLdap -->|No| Fail["Return 401 Unauthorized (invalid_grant)"]
+    LdapCheck -->|Offline / Fail| PredefinedCheck{"Matches Predefined<br/>LDAP Account?"}
+    PredefinedCheck -->|Yes| MintToken
+    PredefinedCheck -->|No| Fail["Return 401<br/>Unauthorized"]
 
     GitHubLogin["/oauth2/github/login"] --> GitHubCallback["/oauth2/github/callback"]
-    GitHubCallback --> AssignEditor["Assign ROLE_EDITOR"] --> MintToken
+    GitHubCallback --> AssignRole["Assign Role<br/>ROLE_EDITOR"] --> MintToken
 ```
 
 #### Technical Details:
