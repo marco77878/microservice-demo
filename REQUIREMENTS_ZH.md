@@ -56,7 +56,9 @@ Spring Cloud 是由 Pivotal 团队提供的一整套成熟的微服务开源解�
 
 ### 1. 角色层级继承树 (Role Hierarchy)
 系统角色权限严格遵循包含继承逻辑：
-$$\text{PRODUCT\_ADMIN} \supset \text{EDITOR} \supset \text{USER}$$
+
+> **`PRODUCT_ADMIN` > `EDITOR` > `USER`**
+
 - **`PRODUCT_ADMIN`**：拥有 `EDITOR` 与 `USER` 的所有权限；
 - **`EDITOR`**：拥有 `USER` 的只读浏览权限，以及新增、修改、删除权限；
 - **`USER`**：基础只读角色，仅拥有产品浏览权限。
