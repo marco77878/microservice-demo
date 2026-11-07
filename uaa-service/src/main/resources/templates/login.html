@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Authentication Center (UAA) - Login & Permission Tester</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --badge-admin: #8b5cf6;
+            --badge-editor: #f59e0b;
+            --badge-user: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .header p {
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .quick-users {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            background: #f1f5f9;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: background 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: #e2e8f0;
+            color: var(--text-main);
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-github {
+            background: #24292e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-github:hover {
+            background: #1b1f23;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: var(--danger);
+            border: 1px solid #fecaca;
+        }
+
+        .result-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .badge-ROLE_PRODUCT_ADMIN { background: var(--badge-admin); }
+        .badge-ROLE_EDITOR { background: var(--badge-editor); }
+        .badge-ROLE_USER { background: var(--badge-user); }
+
+        .token-display {
+            background: #1e293b;
+            color: #38bdf8;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #334155;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background: #475569;
+        }
+
+        .api-tester {
+            margin-top: 24px;
+            border-top: 1px dashed var(--border);
+            padding-top: 20px;
+        }
+
+        .api-tester h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .api-btns {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .btn-api {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .btn-api:hover {
+            border-color: var(--primary);
+            background: #f0f7ff;
+        }
+
+        .api-response {
+            background: #0f172a;
+            color: #a5f3fc;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Unified User Authentication Center (UAA)</h1>
+        <p>Spring Cloud Microservices Platform - Port: 7573</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="card">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('db')">Database Login</button>
+            <button class="tab-btn" onclick="switchTab('ldap')">LDAP Directory Login</button>
+            <button class="tab-btn" onclick="switchTab('github')">GitHub OAuth2 Login</button>
+        </div>
+
+        <div id="error-msg" class="alert alert-error" style="display: none;"></div>
+
+        <!-- Tab 1: DB Form -->
+        <div id="tab-db">
+            <div class="form-group">
+                <label>Username (Database)</label>
+                <input type="text" id="db-username" placeholder="Enter username" value="user_1">
+                <div class="quick-users">
+                    <span style="font-size: 12px; color: var(--text-muted); align-self: center;">Quick Fill:</span>
+                    <button class="quick-btn" onclick="fillDb('user_1', 'user_1')">User (user_1)</button>
+                    <button class="quick-btn" onclick="fillDb('editor_1', 'editor_1')">Editor (editor_1)</button>
+                    <button class="quick-btn" onclick="fillDb('adm_1', 'adm_1')">Admin (adm_1)</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="db-password" placeholder="Enter password" value="user_1">
+            </div>
+            <button class="btn" onclick="submitLogin('db')">Sign In (Database)</button>
+        </div>
+
+        <!-- Tab 2: LDAP Form -->
+        <div id="tab-ldap" style="display: none;">
+            <div class="form-group">
+                <label>LDAP Username</label>
+                <input type="text" id="ldap-username" placeholder="Enter LDAP username" value="ldap_user_1">
+                <div class="quick-users">
+                    <span style="font-size: 12px; color: var(--text-muted); align-self: center;">Quick Fill:</span>
+                    <button class="quick-btn" onclick="fillLdap('ldap_user_1', 'ldap_user_1')">User (ldap_user_1)</button>
+                    <button class="quick-btn" onclick="fillLdap('ldap_editor_1', 'ldap_editor_1')">Editor (ldap_editor_1)</button>
+                    <button class="quick-btn" onclick="fillLdap('ldap_adm_1', 'ldap_adm_1')">Admin (ldap_adm_1)</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>LDAP Password</label>
+                <input type="password" id="ldap-password" placeholder="Enter LDAP password" value="ldap_user_1">
+            </div>
+            <button class="btn" onclick="submitLogin('ldap')">Sign In (LDAP)</button>
+        </div>
+
+        <!-- Tab 3: GitHub Login -->
+        <div id="tab-github" style="display: none; text-align: center; padding: 20px 0;">
+            <p style="margin-bottom: 18px; color: var(--text-muted); font-size: 14px;">
+                Sign in with GitHub OAuth2. Role <strong>EDITOR</strong> will be automatically granted upon authentication.
+            </p>
+            <a href="/oauth2/github/login" class="btn btn-github">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+                Sign In with GitHub (Grants EDITOR Role)
+            </a>
+        </div>
+
+        <!-- Login Result & Token -->
+        <div id="result-section" class="result-box" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>Current User:</strong> <span id="res-username"></span>
+                    <span id="res-badge" class="badge"></span>
+                </div>
+                <button class="quick-btn" onclick="logout()">Sign Out</button>
+            </div>
+
+            <div style="margin-top: 12px;">
+                <label>Issued Access Token (JWT Bearer):</label>
+                <div class="token-display">
+                    <button class="copy-btn" onclick="copyToken()">Copy Token</button>
+                    <span id="res-token"></span>
+                </div>
+            </div>
+
+            <!-- Interactive API Test Panel -->
+            <div class="api-tester">
+                <h3>🧪 Product Service Permission Tester</h3>
+                <div class="api-btns">
+                    <button class="btn-api" onclick="callApi('GET', '/products')">
+                        1. View Products (GET /products)<br><small style="color:var(--text-muted)">Requires USER role or higher</small>
+                    </button>
+                    <button class="btn-api" onclick="callApi('POST', '/products', {name: 'New Product ' + Math.floor(Math.random()*1000)})">
+                        2. Add Product (POST /products)<br><small style="color:var(--text-muted)">Requires EDITOR role or higher</small>
+                    </button>
+                    <button class="btn-api" onclick="callApi('PUT', '/products/1', {name: 'Updated Product Name'})">
+                        3. Update Product (PUT /products/1)<br><small style="color:var(--text-muted)">Requires EDITOR role or higher</small>
+                    </button>
+                    <button class="btn-api" onclick="callApi('DELETE', '/products/1')">
+                        4. Delete Product (DELETE /products/1)<br><small style="color:var(--text-muted)">Requires EDITOR role or higher</small>
+                    </button>
+                </div>
+                <label>API Response Output:</label>
+                <div id="api-output" class="api-response">Click any button above to test role-based access permissions...</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script th:inline="javascript">
+    let currentToken = /*[[${token}]]*/ null;
+    let currentUsername = /*[[${username}]]*/ null;
+    let currentRole = /*[[${role}]]*/ null;
+
+    window.onload = function() {
+        if (currentToken && currentToken !== 'null') {
+            displayAuthResult(currentUsername, currentRole, currentToken);
+        }
+    };
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('tab-db').style.display = 'none';
+        document.getElementById('tab-ldap').style.display = 'none';
+        document.getElementById('tab-github').style.display = 'none';
+        document.getElementById('error-msg').style.display = 'none';
+
+        if (tab === 'db') {
+            event.target.classList.add('active');
+            document.getElementById('tab-db').style.display = 'block';
+        } else if (tab === 'ldap') {
+            event.target.classList.add('active');
+            document.getElementById('tab-ldap').style.display = 'block';
+        } else if (tab === 'github') {
+            event.target.classList.add('active');
+            document.getElementById('tab-github').style.display = 'block';
+        }
+    }
+
+    function fillDb(u, p) {
+        document.getElementById('db-username').value = u;
+        document.getElementById('db-password').value = p;
+    }
+
+    function fillLdap(u, p) {
+        document.getElementById('ldap-username').value = u;
+        document.getElementById('ldap-password').value = p;
+    }
+
+    function submitLogin(type) {
+        const username = document.getElementById(type + '-username').value;
+        const password = document.getElementById(type + '-password').value;
+        const errorDiv = document.getElementById('error-msg');
+        errorDiv.style.display = 'none';
+
+        fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: type, username: username, password: password })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                currentToken = data.access_token;
+                displayAuthResult(data.username, data.role, data.access_token);
+            } else {
+                errorDiv.innerText = data.message || 'Authentication failed';
+                errorDiv.style.display = 'block';
+            }
+        })
+        .catch(err => {
+            errorDiv.innerText = 'Request error: ' + err.message;
+            errorDiv.style.display = 'block';
+        });
+    }
+
+    function displayAuthResult(username, role, token) {
+        document.getElementById('res-username').innerText = username;
+        const badge = document.getElementById('res-badge');
+        badge.innerText = role;
+        badge.className = 'badge badge-' + role;
+        document.getElementById('res-token').innerText = token;
+        document.getElementById('result-section').style.display = 'block';
+    }
+
+    function copyToken() {
+        if (!currentToken) return;
+        navigator.clipboard.writeText(currentToken).then(() => {
+            alert('Access Token copied to clipboard!');
+        });
+    }
+
+    function logout() {
+        currentToken = null;
+        document.getElementById('result-section').style.display = 'none';
+        window.history.replaceState({}, document.title, "/login");
+    }
+
+    function callApi(method, path, body) {
+        const output = document.getElementById('api-output');
+        output.innerText = 'Sending ' + method + ' ' + path + ' ...';
+
+        const headers = {};
+        if (currentToken) {
+            headers['Authorization'] = 'Bearer ' + currentToken;
+        }
+        if (body) {
+            headers['Content-Type'] = 'application/json';
+        }
+
+        fetch(path, {
+            method: method,
+            headers: headers,
+            body: body ? JSON.stringify(body) : null
+        })
+        .then(async res => {
+            let resText = '';
+            try {
+                const json = await res.json();
+                resText = JSON.stringify(json, null, 2);
+            } catch (e) {
+                resText = await res.text();
+            }
+            output.innerText = `HTTP Status: ${res.status} ${res.statusText}\n\nResponse Body:\n${resText}`;
+        })
+        .catch(err => {
+            output.innerText = 'Request failed: ' + err.message;
+        });
+    }
+</script>
+
+</body>
+</html>

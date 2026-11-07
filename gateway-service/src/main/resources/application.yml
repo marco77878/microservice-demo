@@ -1,0 +1,32 @@
+server:
+  port: 7573
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: uaa-token-route
+          uri: ${UAA_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/uaa/**, /token, /login, /api/login, /oauth2/**, /
+        - id: product-route
+          uri: ${PRODUCT_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/products, /products/**
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:SpringCloudUaaJwtSecretKey2026SecureKeyMustBeLongEnough123456789}

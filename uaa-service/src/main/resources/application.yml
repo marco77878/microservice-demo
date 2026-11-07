@@ -1,0 +1,36 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: uaa-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:microservices_db;DB_CLOSE_DELAY=-1;MODE=MySQL}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  thymeleaf:
+    cache: false
+
+ldap:
+  url: ${LDAP_URL:ldap://localhost:389}
+  base-dn: ${LDAP_BASE_DN:dc=example,dc=org}
+
+github:
+  client-id: ${GITHUB_CLIENT_ID:YOUR_GITHUB_CLIENT_ID}
+  client-secret: ${GITHUB_CLIENT_SECRET:YOUR_GITHUB_CLIENT_SECRET}
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:SpringCloudUaaJwtSecretKey2026SecureKeyMustBeLongEnough123456789}
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}

@@ -1,0 +1,128 @@
+version: '3.8'
+
+services:
+  # 1. Relational Database (MySQL 8.0)
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: microservices_db
+    volumes:
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - microservice-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # 2. LDAP Service (OpenLDAP)
+  ldap:
+    image: osixia/openldap:1.5.0
+    container_name: ldap
+    restart: always
+    environment:
+      LDAP_ORGANISATION: "Example Inc."
+      LDAP_DOMAIN: "example.org"
+      LDAP_ADMIN_PASSWORD: "adminpassword"
+    volumes:
+      - ./docker/ldap/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/bootstrap.ldif:ro
+    networks:
+      - microservice-net
+
+  # 3. Service Discovery (Eureka)
+  discovery:
+    build:
+      context: ./discovery-service
+      dockerfile: Dockerfile
+    container_name: discovery
+    restart: always
+    networks:
+      - microservice-net
+
+  # 4. Configuration Center (Spring Cloud Config)
+  configure:
+    build:
+      context: ./config-service
+      dockerfile: Dockerfile
+    container_name: configure
+    restart: always
+    environment:
+      EUREKA_SERVER_URL: http://discovery:8761/eureka/
+    depends_on:
+      - discovery
+    networks:
+      - microservice-net
+
+  # 5. User Account and Authentication (UAA)
+  uaa:
+    build:
+      context: ./uaa-service
+      dockerfile: Dockerfile
+    container_name: uaa
+    restart: always
+    environment:
+      EUREKA_SERVER_URL: http://discovery:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/microservices_db?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: rootpassword
+      SPRING_DATASOURCE_DRIVER: com.mysql.cj.jdbc.Driver
+      LDAP_URL: ldap://ldap:389
+      LDAP_BASE_DN: dc=example,dc=org
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery:
+        condition: service_started
+      ldap:
+        condition: service_started
+    networks:
+      - microservice-net
+
+  # 6. Product Business Service
+  product:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    container_name: product
+    restart: always
+    environment:
+      EUREKA_SERVER_URL: http://discovery:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/microservices_db?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: rootpassword
+      SPRING_DATASOURCE_DRIVER: com.mysql.cj.jdbc.Driver
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery:
+        condition: service_started
+    networks:
+      - microservice-net
+
+  # 7. API Gateway - Only this service exposes external port 7573
+  gateway:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    container_name: gateway
+    restart: always
+    ports:
+      - "7573:7573"
+    environment:
+      EUREKA_SERVER_URL: http://discovery:8761/eureka/
+      UAA_SERVICE_URL: lb://uaa-service
+      PRODUCT_SERVICE_URL: lb://product-service
+    depends_on:
+      - discovery
+      - uaa
+      - product
+    networks:
+      - microservice-net
+
+networks:
+  microservice-net:
+    driver: bridge

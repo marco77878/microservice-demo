@@ -1,0 +1,4 @@
+# Centralized configuration distributed by config-service
+app:
+  jwt:
+    secret: SpringCloudUaaJwtSecretKey2026SecureKeyMustBeLongEnough123456789

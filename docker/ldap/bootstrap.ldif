@@ -1,0 +1,71 @@
+# Root / Organization
+dn: dc=example,dc=org
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+o: Example Inc.
+dc: example
+
+# Organizational Unit for Users
+dn: ou=users,dc=example,dc=org
+objectClass: top
+objectClass: organizationalUnit
+ou: users
+
+# Organizational Unit for Groups
+dn: ou=groups,dc=example,dc=org
+objectClass: top
+objectClass: organizationalUnit
+ou: groups
+
+# User: ldap_user_1 (Password: ldap_user_1) -> ROLE_USER
+dn: cn=ldap_user_1,ou=users,dc=example,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: ldap_user_1
+sn: user_1
+uid: ldap_user_1
+userPassword: ldap_user_1
+
+# User: ldap_editor_1 (Password: ldap_editor_1) -> ROLE_EDITOR
+dn: cn=ldap_editor_1,ou=users,dc=example,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: ldap_editor_1
+sn: editor_1
+uid: ldap_editor_1
+userPassword: ldap_editor_1
+
+# User: ldap_adm_1 (Password: ldap_adm_1) -> ROLE_PRODUCT_ADMIN
+dn: cn=ldap_adm_1,ou=users,dc=example,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: ldap_adm_1
+sn: adm_1
+uid: ldap_adm_1
+userPassword: ldap_adm_1
+
+# Groups
+dn: cn=USER,ou=groups,dc=example,dc=org
+objectClass: top
+objectClass: groupOfNames
+cn: USER
+member: cn=ldap_user_1,ou=users,dc=example,dc=org
+
+dn: cn=EDITOR,ou=groups,dc=example,dc=org
+objectClass: top
+objectClass: groupOfNames
+cn: EDITOR
+member: cn=ldap_editor_1,ou=users,dc=example,dc=org
+
+dn: cn=PRODUCT_ADMIN,ou=groups,dc=example,dc=org
+objectClass: top
+objectClass: groupOfNames
+cn: PRODUCT_ADMIN
+member: cn=ldap_adm_1,ou=users,dc=example,dc=org
