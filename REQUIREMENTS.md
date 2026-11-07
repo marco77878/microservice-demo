@@ -1,5 +1,7 @@
 # Project Requirements Specification
 
+[English](REQUIREMENTS.md) | [简体中文](REQUIREMENTS_ZH.md)
+
 This document details the complete requirements and acceptance criteria for the Spring Cloud Microservices Platform.
 
 ---

@@ -1,5 +1,7 @@
 # Technical Architecture and Implementation
 
+[English](ARCHITECTURE.md) | [简体中文](ARCHITECTURE_ZH.md)
+
 This document provides an in-depth architectural and technical specification of the Spring Cloud Microservices Platform.
 
 ---

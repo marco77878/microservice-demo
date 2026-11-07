@@ -1,5 +1,7 @@
 # Spring Cloud Microservices Platform (UAA + Gateway + Product)
 
+[English](README.md) | [简体中文](README_ZH.md)
+
 [![Java 17](https://img.shields.io/badge/Java-17%20LTS-orange.svg)](https://openjdk.org/projects/jdk/17/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.1.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2022.0.4-blue.svg)](https://spring.io/projects/spring-cloud)
@@ -15,9 +17,8 @@ This platform integrates a Unified Authentication Center (**UAA**), an edge **AP
 
 Detailed specifications and architectural deep dives have been separated into dedicated documents:
 
-- 📋 **[Project Requirements Specification (English)](REQUIREMENTS.md)**: Full background, functional specs, API permissions, role constraints, and evaluator criteria.
-- 📋 **[Project Requirements Specification (Chinese)](REQUIREMENTS_ZH.md)**: Original requirements specification document.
-- 🏛️ **[Technical Architecture & Implementation](ARCHITECTURE.md)**: In-depth architectural designs, Mermaid topology diagrams, authentication flow charts, security filters, role hierarchy, and persistence design.
+- 📋 **[Requirements Specification (English)](REQUIREMENTS.md)** | **[需求规格说明书 (中文)](REQUIREMENTS_ZH.md)**: Full background, functional specs, API permissions, role constraints, and evaluator criteria.
+- 🏛️ **[Technical Architecture & Implementation (English)](ARCHITECTURE.md)** | **[技术架构与详细实现 (中文)](ARCHITECTURE_ZH.md)**: In-depth architectural designs, Mermaid topology diagrams, authentication flow charts, security filters, role hierarchy, and persistence design.
 
 ---
 

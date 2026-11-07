@@ -1,5 +1,7 @@
 # 📋 Spring Cloud 微服务全栈平台 - 需求规格说明书
 
+[English](REQUIREMENTS.md) | [简体中文](REQUIREMENTS_ZH.md)
+
 ---
 
 ## 一、 项目背景
