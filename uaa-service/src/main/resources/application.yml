@@ -15,8 +15,14 @@ spring:
     show-sql: false
   thymeleaf:
     cache: false
+  ldap:
+    urls: ${LDAP_URL:ldap://localhost:389}
+    base: ${LDAP_BASE_DN:dc=example,dc=org}
+    username: ${LDAP_ADMIN_DN:cn=admin,dc=example,dc=org}
+    password: ${LDAP_ADMIN_PASSWORD:adminpassword}
 
 ldap:
+  enabled: ${LDAP_ENABLED:true}
   url: ${LDAP_URL:ldap://localhost:389}
   base-dn: ${LDAP_BASE_DN:dc=example,dc=org}
 

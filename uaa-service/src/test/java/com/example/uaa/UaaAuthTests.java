@@ -18,7 +18,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     "spring.datasource.url=jdbc:h2:mem:uaadb;DB_CLOSE_DELAY=-1;MODE=MySQL",
     "spring.datasource.driver-class-name=org.h2.Driver",
     "spring.jpa.hibernate.ddl-auto=create-drop",
-    "eureka.client.enabled=false"
+    "eureka.client.enabled=false",
+    "ldap.enabled=false",
+    "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration,org.springframework.boot.autoconfigure.data.ldap.LdapRepositoriesAutoConfiguration"
 })
 @AutoConfigureMockMvc
 public class UaaAuthTests {
@@ -43,7 +45,7 @@ public class UaaAuthTests {
     }
 
     @Test
-    @DisplayName("Test LDAP predefined users authentication")
+    @DisplayName("Test LDAP predefined users authentication (fallback mode)")
     public void testLdapPredefinedUsers() {
         assertEquals("ROLE_USER", ldapAuthService.authenticate("ldap_user_1", "ldap_user_1"));
         assertEquals("ROLE_EDITOR", ldapAuthService.authenticate("ldap_editor_1", "ldap_editor_1"));
@@ -68,7 +70,7 @@ public class UaaAuthTests {
     }
 
     @Test
-    @DisplayName("Test token endpoint for LDAP editor user")
+    @DisplayName("Test token endpoint for LDAP editor user (predefined fallback)")
     public void testTokenLdapEditor() throws Exception {
         mockMvc.perform(post("/uaa/token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
